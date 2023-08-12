@@ -3,6 +3,7 @@ import IconButton from "../IconButton/IconButton";
 import { IoChatboxOutline, IoMoonOutline } from "react-icons/io5";
 import Image from "next/image";
 import Chat from "@/containers/chat/Chat";
+import { createPortal } from "react-dom";
 
 export interface NavbarProps extends HTMLProps<HTMLElement> {
   _: never;
@@ -18,7 +19,7 @@ export default function Navbar() {
       </IconButton>
       <IconButton onClick={() => setShowChat(value => !value)} shouldFill={showChat}>
         <IoChatboxOutline />
-        {showChat && <Chat />}
+        {showChat && createPortal(<Chat />, document.body)}
       </IconButton>
       <IconButton>
         <Image
