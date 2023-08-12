@@ -1,6 +1,6 @@
 import useOnChange from "@/hooks/useOnChange";
 import { useRef, useCallback, useEffect, useState } from "react";
-import { ChatState, type User } from "../../Chat";
+import { type ChatState, type User } from "../../Chat";
 import Image from "next/image";
 
 const users = [
