@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f7f7f7;
+  --level1: #ffffff;
+  --level2: #f2f2f2;
+  --level3: #e8e8e8;
+  --level4: #dedede;
+  --level1Hover: #f2f2f2;
+  --level2Hover: #e6e6e6;
+  --primaryText: #000000;
+  --secondaryText: #212121;
+  --tertiaryText: #4d4d4d;
+  --quaternaryText: #595959;
+  --invertedPrimaryText: #ffffff;
+  --invertedTertiaryText: #b3b3b3;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--primaryText);
+}
