@@ -2,10 +2,14 @@ import IconButton from "@/components/IconButton/IconButton";
 import { type ChatState } from "../../Chat";
 import { IoCloseOutline, IoRemoveOutline } from "react-icons/io5";
 import Image from "next/image";
+import { type MessagesState } from "../Messages";
 
 export default function MessagesHeader({
   currentRecipient,
-}: Pick<ChatState, 'currentRecipient'>) {
+  currentConversationId,
+  addConToQueue,
+  closeMessages
+}: Pick<ChatState, 'currentRecipient' | 'currentConversationId'> & MessagesState) {
   return (
     <div className="flex justify-between items-center">
       {!currentRecipient ? (
@@ -28,11 +32,11 @@ export default function MessagesHeader({
       )}
       <div className="flex">
         {currentRecipient && (
-          <IconButton>
+          <IconButton onClick={() => addConToQueue(currentConversationId!, currentRecipient)}>
             <IoRemoveOutline />
           </IconButton>
         )}
-        <IconButton>
+        <IconButton onClick={closeMessages}>
           <IoCloseOutline />
         </IconButton>
       </div>
