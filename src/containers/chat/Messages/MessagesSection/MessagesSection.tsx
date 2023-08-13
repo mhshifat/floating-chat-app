@@ -1,8 +1,8 @@
-import { useCallback } from "react";
 import { type ChatState } from "../../Chat";
 import Image from "next/image";
 import { api } from "@/utils/api";
-import { Message } from "@prisma/client";
+import { type Message } from "@prisma/client";
+import { useRef, useEffect } from 'react';
 
 // const messages = [
 //   {
@@ -35,7 +35,12 @@ const getTimeStamp = (msgs: Message[], index: number) => {
   }).format(currentDate as Date);
 };
 export default function MessagesSection({ currentRecipient, currentConversationId }: Pick<ChatState, 'currentRecipient' | 'currentConversationId'>) {
+  const scrollRef = useRef<HTMLLIElement>(null);
   const { data: messages, isLoading, error } = api.chat.messages.useQuery({ conversationId: currentConversationId! }, { enabled: currentConversationId !== 'newMessage' })
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages])
 
   if (currentConversationId !== 'newMessage' && isLoading || error) return (
     <div className="h-full flex items-center justify-center">
@@ -47,7 +52,7 @@ export default function MessagesSection({ currentRecipient, currentConversationI
       {messages && Array.isArray(messages) && messages.map((message, idx) => {
         const timestamp = getTimeStamp(messages, idx);
         return (
-          <li key={message.id} className="flex flex-col w-full">
+          <li ref={scrollRef} key={message.id} className="flex flex-col w-full">
             {timestamp !== null && <p className="text-quaternaryText mb-5 text-center empty:hidden">{timestamp}</p>}
             {message.userId === currentRecipient?.id ? (
               <div className="flex">
