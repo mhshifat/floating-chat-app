@@ -3,6 +3,7 @@ import {
   createTRPCRouter,
   protectedProcedure,
 } from "@/server/api/trpc";
+import { observable } from "@trpc/server/observable";
 
 export const chatRouter = createTRPCRouter({
   conversations: protectedProcedure.query(({ ctx }) => {
@@ -115,6 +116,7 @@ export const chatRouter = createTRPCRouter({
           }
         })
 
+        ctx.ee.emit('sendMessage', { conversationId: conversation.id, userId });
         return conversation;
       })
     }
@@ -145,6 +147,32 @@ export const chatRouter = createTRPCRouter({
           id: conversationId
         }
       })
+    })
+    const user = await ctx.prisma.conversationUser.findFirst({
+      where: {
+        conversationId,
+        NOT: {
+          userId: ctx.session.user.id
+        }
+      },
+      select: {
+        userId: true
+      }
+    })
+    ctx.ee.emit('sendMessage', { conversationId, userId: user!.userId })
+  }),
+  onSendMessage: protectedProcedure.subscription(({ ctx }) => {
+    return observable<{ conversationId: string }>((emit) => {
+      const onSendMessage = (data: { conversationId: string, userId: string }) => {
+        if (data.userId === ctx.session.user.id) {
+          emit.next({ conversationId: data.conversationId })
+        }
+      }
+      ctx.ee.on('sendMessage', onSendMessage);
+
+      return () => {
+        ctx.ee.off('sendMessage', onSendMessage);
+      }
     })
   })
 });

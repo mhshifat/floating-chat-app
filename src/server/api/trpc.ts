@@ -14,7 +14,12 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 import { getServerAuthSession } from "@/server/auth";
 import { prisma } from "@/server/db";
-
+import { getSession } from "next-auth/react";
+import { type NodeHTTPCreateContextFnOptions } from "@trpc/server/dist/adapters/node-http";
+import { type IncomingMessage } from "http";
+import type * as trpcNext from '@trpc/server/adapters/next';
+import type ws from 'ws';
+import { ee } from "../wsServer/eventEmitter";
 /**
  * 1. CONTEXT
  *
@@ -41,6 +46,7 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
   return {
     session: opts.session,
     prisma,
+    ee
   };
 };
 
@@ -60,6 +66,21 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
     session,
   });
 };
+
+export const createContext = async (
+  opts:
+    | NodeHTTPCreateContextFnOptions<IncomingMessage, ws>
+    | trpcNext.CreateNextContextOptions,
+) => {
+  const session = await getSession(opts);
+
+  console.log('createContext for', session?.user?.name ?? 'unknown user');
+
+  return {
+    session,
+  };
+};
+
 
 /**
  * 2. INITIALIZATION
@@ -87,7 +108,9 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
  * 3. ROUTER & PROCEDURE (THE IMPORTANT BIT)
  *
  * These are the pieces you use to build your tRPC API. You should import these a lot in the
- * "/src/server/api/routers" directory.
+ * "/src/server/api/routers" directory.import { ws } from 'ws';
+import { ee } from './../wsServer/eventEmitter';
+
  */
 
 /**
