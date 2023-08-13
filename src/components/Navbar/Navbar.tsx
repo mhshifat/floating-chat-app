@@ -14,7 +14,7 @@ export default function Navbar() {
 
   return (
     <nav className="z-50 bg-level1 fixed top-0 flex h-14 w-full items-center justify-end shadow-sm space-x-2 px-4">
-      {sessionData?.user ? (
+      {sessionData?.user?.id ? (
         <>
           <IconButton>
             <IoMoonOutline />
@@ -22,7 +22,7 @@ export default function Navbar() {
           <Chat />
           <IconButton>
             <Image
-              src={sessionData.user.image!}
+              src={sessionData.user.image ?? ''}
               className="h-8 w-8 rounded-full"
               alt="avatar image"
               width={32}

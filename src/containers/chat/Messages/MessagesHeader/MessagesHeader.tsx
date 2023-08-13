@@ -18,7 +18,7 @@ export default function MessagesHeader({
         <div className="flex">
           <Image
             alt="avatar image"
-            src={currentRecipient.image!}
+            src={currentRecipient.image ?? ''}
             className="rounded-full w-11 h-11 mr-2"
             width={44}
             height={44}

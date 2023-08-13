@@ -72,7 +72,7 @@ export default function Conversations({ selectConversation }: ConversationsProps
               }} className="flex items-center text-left space-x-2 mx-2 py-2 w-full">
                 <Image
                   alt="avatar image"
-                  src={recipient!.image!}
+                  src={recipient?.image ?? ''}
                   className="rounded-full w-12 h-12"
                   width={48}
                   height={48}

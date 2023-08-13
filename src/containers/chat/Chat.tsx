@@ -66,7 +66,7 @@ export default function Chat() {
                 }}>
                   <Image
                     alt='avatar image'
-                    src={conversationEntry.recipient.image!}
+                    src={conversationEntry.recipient.image ?? ''}
                     className='w-12 h-12 rounded-full'
                     width={48}
                     height={48}

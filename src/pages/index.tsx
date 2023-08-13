@@ -41,11 +41,11 @@ export default function Home() {
       <main className="flex min-h-screen flex-col items-center justify-center">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
           <div className="flex flex-col items-center gap-2 w-[400px] max-w-full">
-            <form onSubmit={changeUserData} className="bg-level1 shadow-sm p-8 flex flex-col space-y-5 rounded-xl w-full">
+            {sessionData?.user?.id && <form onSubmit={changeUserData} className="bg-level1 shadow-sm p-8 flex flex-col space-y-5 rounded-xl w-full">
               {sessionData?.user?.image && (
                 <Image
                   alt="avatar image"
-                  src={sessionData.user.image}
+                  src={sessionData.user.image ?? ''}
                   className="mx-auto w-11 h-11 rounded-full"
                   width={44}
                   height={44}
@@ -68,13 +68,13 @@ export default function Home() {
               <Input
                 name="image"
                 label='Change Image'
-                value={values.image}
+                value={values.image ?? ''}
                 onChange={handleChange}
                 placeholder="Image"
               />
 
               <button type="submit" className="h-9 w-full bg-primaryText text-invertedPrimaryText rounded-lg">Submit</button>
-            </form>
+            </form>}
             <AuthShowcase />
           </div>
         </div>

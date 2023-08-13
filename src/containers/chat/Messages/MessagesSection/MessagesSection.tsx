@@ -45,7 +45,7 @@ export default function MessagesSection({ currentRecipient }: Pick<ChatState, 'c
               <div className="flex">
                 <Image
                   alt="avatar image"
-                  src={currentRecipient.image!}
+                  src={currentRecipient.image ?? ''}
                   className="rounded-full w-7 h-7 self-end mr-2"
                   width={28}
                   height={28}
