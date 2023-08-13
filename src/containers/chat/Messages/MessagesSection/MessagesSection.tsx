@@ -15,12 +15,6 @@ const messages = [
     userId: "2",
     createdAt: new Date(),
   },
-  {
-    id: "2",
-    messageText: "Hi",
-    userId: "2",
-    createdAt: new Date(),
-  },
 ];
 
 export default function MessagesSection({ currentRecipient }: Pick<ChatState, 'currentRecipient'>) {
@@ -41,7 +35,7 @@ export default function MessagesSection({ currentRecipient }: Pick<ChatState, 'c
   }, []);
 
   return (
-    <ul className="flex h-full flex-col space-y-5">
+    <ul className="flex h-full flex-col space-y-5 overflow-y-auto">
       {messages.map((message, idx) => {
         const timestamp = getTimeStamp(messages, idx);
         return (
@@ -57,8 +51,8 @@ export default function MessagesSection({ currentRecipient }: Pick<ChatState, 'c
                   height={28}
                 />
 
-                <div className="bg-level2 p-2 flex flex-col rounded-xl min-w-[50%]">
-                  <p className="mb-2">{message.messageText}</p>
+                <div className="bg-level2 p-2 flex flex-col rounded-xl min-w-[60%] max-w-[60%]">
+                  <p className="mb-2 whitespace-pre-line">{message.messageText}</p>
 
                   <p className="text-tertiaryText text-xs self-end">{new Intl.DateTimeFormat(undefined, {
                     hour: 'numeric',
@@ -67,8 +61,8 @@ export default function MessagesSection({ currentRecipient }: Pick<ChatState, 'c
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col rounded-xl p-2 bg-primaryText self-end min-w-[50%]">
-                <p className="text-invertedPrimaryText mb-2">{message.messageText}</p>
+              <div className="flex flex-col rounded-xl p-2 bg-primaryText self-end min-w-[60%] max-w-[60%]">
+                <p className="text-invertedPrimaryText mb-2 whitespace-pre-line">{message.messageText}</p>
 
                 <p className="text-invertedTertiaryText text-xs self-end">{new Intl.DateTimeFormat(undefined, {
                     hour: 'numeric',
