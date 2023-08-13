@@ -1,9 +1,11 @@
 import IconButton from "@/components/IconButton/IconButton";
 import useOnChange from "@/hooks/useOnChange";
+import { api } from "@/utils/api";
 import { type KeyboardEvent, useCallback, useEffect, useRef } from "react";
 import { IoSend } from "react-icons/io5";
+import { type ChatState } from "../../Chat";
 
-export default function NewMessageTextarea() {
+export default function NewMessageTextarea({ currentConversationId, currentRecipient, setCurrentConversationId }: Pick<ChatState, 'currentConversationId' | 'currentRecipient' | 'setCurrentConversationId'>) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const {
     values: { message },
@@ -12,6 +14,8 @@ export default function NewMessageTextarea() {
   } = useOnChange({
     message: "",
   });
+  const sendMessageMutation = api.chat.sendMessage.useMutation();
+  const utils = api.useContext();
 
   const resizeTextArea = useCallback(() => {
     if (textareaRef.current) {
@@ -21,8 +25,27 @@ export default function NewMessageTextarea() {
   }, [])
 
   const sendMessage = useCallback(() => {
-    setValues({ message: '' });
-  }, [setValues])
+    if (message) {
+      sendMessageMutation.mutate({
+        messageText: message,
+        ...currentConversationId === 'newMessage' ? { userId: currentRecipient?.id } : { conversationId: currentConversationId }
+      }, {
+        onSettled: (data, error) => {
+          if (currentConversationId !== 'newMessage') {
+            void utils.chat.conversations.invalidate();
+            void utils.chat.messages.invalidate({ conversationId: currentConversationId! });
+          }
+          if (data?.id) {
+            setCurrentConversationId(data.id as string)
+          }
+          if (error) {
+            console.error(error);
+          }
+          setValues({ message: '' });
+        }
+      })
+    }
+  }, [currentConversationId, currentRecipient?.id, message, sendMessageMutation, setCurrentConversationId, setValues, utils.chat.conversations, utils.chat.messages])
 
   const onKeyDown = useCallback((e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.altKey && !e.shiftKey) {
@@ -52,7 +75,7 @@ export default function NewMessageTextarea() {
         onChange={handleChange}
       />
       {message !== "" && (
-        <IconButton>
+        <IconButton onClick={sendMessage}>
           <IoSend />
         </IconButton>
       )}

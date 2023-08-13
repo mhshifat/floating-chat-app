@@ -4,6 +4,8 @@ import MessagesHeader from "./MessagesHeader/MessagesHeader";
 import MessagesSection from "./MessagesSection/MessagesSection";
 import NewConversationUserInput from "./NewConversationUserInput/NewConversationUserInput";
 import NewMessageTextarea from "./NewMessageTextarea/NewMessageTextarea";
+import { api } from "@/utils/api";
+import { useEffect } from 'react';
 
 export type MessagesState = {
   addConToQueue: (conversationId: string, recipient: User) => void;
@@ -17,10 +19,25 @@ export default function Messages({
   queueLength,
   addConToQueue,
   closeMessages,
-}: Omit<ChatState, "setCurrentConversationId"> &
+  setCurrentConversationId
+}: ChatState &
   MessagesState & {
     queueLength: number;
   }) {
+  const { data: conversationIdFound, refetch } = api.chat.findConversation.useQuery({ userId: currentRecipient?.id ?? '' }, { enabled: false })
+  
+  useEffect(() => {
+    if (currentConversationId === 'newMessage') {
+      void refetch();
+    }
+  }, [currentConversationId, currentRecipient, refetch])
+
+  useEffect(() => {
+    if (conversationIdFound) {
+      setCurrentConversationId(conversationIdFound as string)
+    }
+  }, [conversationIdFound, setCurrentConversationId])
+
   return (
     <div
       onClick={(e) => e.stopPropagation()}
@@ -36,9 +53,9 @@ export default function Messages({
         <NewConversationUserInput setCurrentRecipient={setCurrentRecipient} />
       )}
       {currentRecipient !== null && (
-        <MessagesSection currentRecipient={currentRecipient} />
+        <MessagesSection currentRecipient={currentRecipient} currentConversationId={currentConversationId} />
       )}
-      {currentRecipient !== null && <NewMessageTextarea />}
+      {currentRecipient !== null && <NewMessageTextarea setCurrentConversationId={setCurrentConversationId} currentConversationId={currentConversationId} currentRecipient={currentRecipient} />}
     </div>
   );
 }

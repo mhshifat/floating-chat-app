@@ -20,7 +20,7 @@ export default function Chat() {
   const [conversationQueue, setConversationQueue] = useState<{ conversationId: string, recipient: User }[]>([]);
 
   const selectConversation = useCallback((conversationId: string, recipient: User | null) => {
-    setCurrentConversationId(Math.random() + "");
+    setCurrentConversationId(conversationId);
     setCurrentRecipient(recipient);
     setShowConversations(false);
   }, []);
@@ -51,6 +51,7 @@ export default function Chat() {
           queueLength={conversationQueue.length}
           addConToQueue={addConToQueue}
           closeMessages={closeMessages}
+          setCurrentConversationId={setCurrentConversationId}
         />
       )}
       {!!conversationQueue.length && (
