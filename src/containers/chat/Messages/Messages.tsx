@@ -1,5 +1,6 @@
 import { type ChatState } from "../Chat";
 import MessagesHeader from "./MessagesHeader/MessagesHeader";
+import MessagesSection from "./MessagesSection/MessagesSection";
 import NewConversationUserInput from "./NewConversationUserInput/NewConversationUserInput";
 
 export default function Messages({
@@ -13,7 +14,7 @@ export default function Messages({
     >
       <MessagesHeader currentRecipient={currentRecipient} />
       {currentRecipient === null && <NewConversationUserInput setCurrentRecipient={setCurrentRecipient} />}
-      <p>Messages</p>
+      <MessagesSection currentRecipient={currentRecipient} />
     </div>
   );
 }
