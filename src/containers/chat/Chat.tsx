@@ -4,13 +4,7 @@ import Messages from './Messages/Messages';
 import Image from 'next/image';
 import IconButton from '@/components/IconButton/IconButton';
 import { IoChatboxOutline } from 'react-icons/io5';
-
-export type User = {
-  id: string;
-  name: string;
-  username: string;
-  image: string;
-}
+import { type User } from '@prisma/client';
 
 export type ChatState = {
   currentConversationId: string | null;
@@ -72,7 +66,7 @@ export default function Chat() {
                 }}>
                   <Image
                     alt='avatar image'
-                    src={conversationEntry.recipient.image}
+                    src={conversationEntry.recipient.image!}
                     className='w-12 h-12 rounded-full'
                     width={48}
                     height={48}

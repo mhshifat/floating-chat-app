@@ -1,4 +1,5 @@
-import { type User, type ChatState } from "../Chat";
+import { type ChatState } from "../Chat";
+import { type User } from '@prisma/client';
 import MessagesHeader from "./MessagesHeader/MessagesHeader";
 import MessagesSection from "./MessagesSection/MessagesSection";
 import NewConversationUserInput from "./NewConversationUserInput/NewConversationUserInput";

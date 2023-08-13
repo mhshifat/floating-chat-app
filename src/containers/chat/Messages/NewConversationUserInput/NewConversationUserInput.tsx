@@ -1,6 +1,7 @@
 import useOnChange from "@/hooks/useOnChange";
 import { useRef, useCallback, useEffect, useState } from "react";
-import { type ChatState, type User } from "../../Chat";
+import { type ChatState } from "../../Chat";
+import { type User } from '@prisma/client';
 import Image from "next/image";
 
 const users = [
@@ -10,18 +11,6 @@ const users = [
     username: 'Jane',
     image: 'https://picsum.photos/200'
   },
-  {
-    id: "2",
-    name: 'Jill Doe',
-    username: 'Jill',
-    image: 'https://picsum.photos/200'
-  },
-  {
-    id: "3",
-    name: 'John Doe',
-    username: 'John',
-    image: 'https://picsum.photos/200'
-  },
 ]
 
 export default function NewConversationUserInput({ setCurrentRecipient }: Pick<ChatState, 'setCurrentRecipient'>) {
@@ -29,7 +18,7 @@ export default function NewConversationUserInput({ setCurrentRecipient }: Pick<C
   const { values: { user }, handleChange } = useOnChange({
     user: '',
   });
-  const [searchResults, setSearchResults] = useState<User[]>([]);
+  const [searchResults, setSearchResults] = useState<Omit<User, 'emailVerified' | 'theme' | 'email'>[]>([]);
 
   const fetchUsers = useCallback(() => {
     if (!user) {
@@ -60,10 +49,10 @@ export default function NewConversationUserInput({ setCurrentRecipient }: Pick<C
         <ul className="absolute left-0 ring-0 top-[calc(100%+12px)] w-full">
           {searchResults.map(user => (
             <li key={user.id} className="bg-level2 hover:bg-level2Hover first:rounded-t-lg last:rounded-b-lg">
-              <button onClick={() => setCurrentRecipient(user)} className="flex text-left w-full p-3">
+              <button onClick={() => setCurrentRecipient(user as User)} className="flex text-left w-full p-3">
                 <Image
                   alt="avatar image"
-                  src={user.image}
+                  src={user.image!}
                   className="rounded-full mr-2 w-11 h-11"
                   width={44}
                   height={44}
